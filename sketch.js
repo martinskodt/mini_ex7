@@ -2,9 +2,16 @@ var ansigter = []
 var eye1;
 var eye2;
 var eyefill = "O"
+var eyeon = false;
+var on = false
 var bubble = 0;
 var gif
 var song
+var mundx =0
+var mundy =0
+		
+var text = "Form Face"
+
 function Face(x,y){
 
 this.x = x;
@@ -12,8 +19,8 @@ this.y = y;
 	
 this.eyes = function(){
 	
-	var eyecol = color(255,255,255,100)
-	eye1 = createButton("O")	
+	var eyecol = color(255,255,255)
+	eye1 = createButton(eyefill,false)	
 	eye1.position(x,y)
 	eye1.style("background-color",eyecol)	
 
@@ -21,13 +28,26 @@ this.eyes = function(){
 	eye2.position(x+100,y)
 	eye2.style("background-color",eyecol)
 	
-	if(eye1.mousePressed || eye2.mousePressed){
-	eyefill = "-"
-} else{
-	eyefill = "O"
+eye1.mousePressed(this.eyeclose) 
+eye2.mousePressed(this.eyeclose)
+	
+
 }
+
+this.eyeclose = function(){	
+	if(eyeon){ 
+		eyeon = false
+	} else {
+		eyeon = true
 	}
 	
+	if(eyeon){
+		eyefill = "-"
+	}else{ 
+		eyefill = "O"
+	}	
+}	
+
 this.nose = function(){
 	var sel;
 	textAlign(CENTER)
@@ -43,65 +63,85 @@ this.nose = function(){
 	this.sel.option(' ');
 	this.sel.option('me');
 	
-	this.sel.changed(makegif)
+	this.sel.changed(makestar)
 	}
 	
 this.mouth = function(){
-		var uplip
-		var lowlip
-		var lipcol = color(255,0,0,100)
-	uplip = createButton("||||||||||||||||||||||")
-	uplip.position(x+17,y+80)
-	uplip.style("background-color",lipcol)
-		
-	lowlip = createButton("||||||||||||||||||||||")
-	lowlip.position(x+17,y+108)
-	lowlip.style("background-color",lipcol)
+	var lip
+	var lipcol = color(255,0,0)
+	lip = createButton("||||||||||||||||||||||",false)
+	lip.position(x+17+mundx,y+108+mundy)
+	lip.style("background-color",lipcol)
+	lip.mousePressed(sang)
 
-//kommer tilbage til
-//this.uplip.mousePressed(sang())
-//this.lowlip.mousePressed(sang())
-	}
+	if(on){
+		mundx = sin(frameCount * 0.5) * 200
+		mundy = 50 +cos(frameCount * 0.5) * 50
+	}else{ 
+		
+	}	
+
 }
 
 function sang(){
-song.play;
-song.setVolume(0.5)
-	
+	on = true
+	console.log(makestar.star)
+	song.setVolume(0.15)
+	song.play();
+	song.jump(23)
+
+	if(song.isPlaying){
+		song.setVolume(0.15)
+		song.playMode("restart")
+		
+	}
+
 }
 
-function makegif(){	
-gif.show;
+function makestar(){	
+noStroke()
+fill(255)
+ellipse(random(width),random(height),mundy,mundy)
 
+}
 }
 
 function preload(){
-gif = loadGif("assets/gandalf.gif")
-
 song = loadSound("assets/shooting.stars.mp3")
+createCanvas(window.innerWidth,window.innerHeight)
+
+	
 }
 
 function setup() {
+	background(10,20,100)
 	frameRate(60)
-    createCanvas(1000,1000)
-    background(30,50,200)
+
+	
+
 }
 
 function draw() {
-//background(70,70,200,90)
-image(gif,50,700)
-gif.hide
-  for (var i=0;i< 1 ;i++){
-	ansigter[i] = new Face(400,400)
-	  ansigter[i].eyes();
-	ansigter[i].nose();
-	ansigter[i].mouth();
-	}
-	
+	//background(10,20,100)
+ansigter[0] = new Face(width/2 -100,height/2 -100)
+	ansigter[0].eyes();
+	ansigter[0].nose();
+	ansigter[0].mouth();
 
-	
 }
-function mousePressed(){
-	ansigter.push(new Face(mouseX,mouseY))
-}
+
+
+//  for (var i=0;i< ansigter.length ;i++){
+//	ansigter[i] = new Face(width/2 -100,height/2 -100)
+//
+//	}
+//
+////
+////
+//function mousePressed(){
+//	
+//if( mouseX <= width/2 -100 || mouseX >= width/2 -100 +200 || mouseY >= height/2 -100 + 140 || mouseY <= height/2 -100 )
+//	console.log("face")
+//	ansigter.push(new Face(mouseX,mouseY))
+//}
 
